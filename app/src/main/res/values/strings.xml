@@ -1,7 +1,53 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-
-    <string name="app_name">AGIT</string>
-    <string name="hello_world">Hello world!</string>
-
+	<string name="app_name">AGIT</string>
+	<string name="navigation_drawer_open" translatable="false">Open navigation drawer</string>
+	<string name="navigation_drawer_close" translatable="false">Close navigation drawer</string>
+	<string name="clone_repository">Clone</string>
+	<string name="create_repository">Create</string>
+	<string name="import_repository">Import</string>
+	<string name="add">Add</string>
+	<string name="file_not_support">Can not support this type of file</string>
+	<string name="project_name">Project Name</string>
+	<string name="local_path">Local Path</string>
+	<string name="browse">BROWSE</string>
+	<string name="clone_url">Clone URL</string>
+	<string name="edt_blank_err">This field cannot be empty</string>
+	<string name="message_clone_process">Cloning repository, please wait...</string>
+	<string name="message_clone_success">Cloning Success</string>
+	<string name="err_message">An error occured. Please try it later.</string>
+	<string name="err_not_directory">Local Path is not a directory</string>
+	<string name="err_when_clone">There are some errors occuring while cloning. Please try it later.</string>
+	<string name="err_fail_create_directory">There are some errors occuring while creating directory. Check if the dierctory is writable.</string>
+	<string name="err_directory_exists">The direcotory has already exists</string>
+	<string name="err_no_internet">Please check your Internet state</string>
+	<string name="create_repository_success">Git init success</string>
+	<string name="repository_tab_title_file">Files</string>
+	<string name="repository_tab_title_commit">Commits (%1$d)</string>
+	<string name="commit_success">Commit Success</string>
+	<string name="commit_fail">Commit Fail</string>
+	<string name="commit">Commit</string>
+	<string name="commit_message">Commit Message</string>
+	<string name="pick_author">Pick an Author</string>
+	<string name="commit_add_all">Add all to stage before commit</string>
+	<string name="advanced_option">Advanced Options</string>
+	<string name="pick_committer_optional">Pick a Committer (Optional)</string>
+	<string name="pick_committer">Pick a Committer</string>
+	<string name="add_new_people">Add new people</string>
+	<string name="full_name">Full Name</string>
+	<string name="email">Email</string>
+	<string name="add_people">Add People</string>
+	<string name="edit_people">Edit People</string>
+	<string name="push">Push</string>
+	<string name="username">Username</string>
+	<string name="password">Password</string>
+	<string name="save_username_and_password">Save username and password</string>
+	<string name="ignore_auth">Ignore Authentication</string>
+	<string name="auth">Authentication</string>
+	<string name="push_all_branches">Push all branches</string>
+	<string name="choose_remote">Choose Remote</string>
+	<string name="push_success">Push Success</string>
+	<string name="add_remote">Add remote</string>
+	<string name="name">Name</string>
+	<string name="url">URL</string>
 </resources>

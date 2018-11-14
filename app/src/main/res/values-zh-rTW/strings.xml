@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="add">新增</string>
+	<string name="file_not_support">不支援這類檔案格式</string>
+	<string name="project_name">專案名稱</string>
+	<string name="local_path">裝置路徑</string>
+	<string name="browse">瀏覽</string>
+	<string name="edt_blank_err">此欄不可空白</string>
+	<string name="err_message">發生錯誤，請稍後再試</string>
+	<string name="err_not_directory">裝置資料夾不是一個目錄</string>
+	<string name="err_when_clone">在 Cloning 時出了一點問題，請稍後再試</string>
+	<string name="err_fail_create_directory">在建立資料夾時出了一點問題，請確認該資料夾是否可寫</string>
+	<string name="err_directory_exists">資料夾已經存在</string>
+	<string name="err_no_internet">請確認網路連線</string>
+	<string name="create_repository_success">Git 儲存庫建立成功</string>
+</resources>

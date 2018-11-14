@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical">
+
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+			app:popupTheme="@style/AppTheme.PopupOverlay"
+			app:layout_scrollFlags="scroll|enterAlways">
+			
+			<ImageView
+				android:id="@+id/repositoryImgRemote"
+				android:layout_gravity="right"
+				android:layout_marginRight="@dimen/activity_horizontal_margin"
+				android:src="@drawable/ic_cloud_black_24dp"
+				style="@style/AppTheme.ToolbarIndicator"/>
+
+			<ImageView
+				android:id="@+id/repositoryImgBranch"
+				android:layout_gravity="right"
+				android:layout_marginRight="@dimen/activity_horizontal_margin"
+				android:src="@drawable/ic_call_split_black_24dp"
+				style="@style/AppTheme.ToolbarIndicator"/>
+
+		</android.support.v7.widget.Toolbar>
+
+		<android.support.design.widget.TabLayout 
+			style="@style/AppTheme.TabLayout.ColorAccent"
+			android:id="@+id/tabLayout"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:layout_scrollFlags="scroll|enterAlways"/>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.constraint.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent">
+
+		<android.support.v4.view.ViewPager
+			android:id="@+id/repositoryViewPager"
+			android:layout_width="match_parent"
+			android:layout_height="match_parent"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"
+			app:layout_behavior="@string/appbar_scrolling_view_behavior"
+			app:layout_scrollFlags="scroll|enterAlways"/>
+		
+		<android.support.design.widget.FloatingActionButton
+			style="@style/AppTheme.Fab.Light.Red"
+			android:id="@+id/repositoryFab"
+			android:src="@drawable/ic_track_changes_black_24dp"
+			app:layout_constraintEnd_toEndOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent"/>
+
+	</android.support.constraint.ConstraintLayout>
+
+</LinearLayout>
+

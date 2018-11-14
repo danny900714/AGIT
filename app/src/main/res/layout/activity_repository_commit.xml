@@ -1,0 +1,162 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:orientation="vertical"
+	android:fitsSystemWindows="true">
+
+	<android.support.design.widget.AppBarLayout
+		android:layout_width="match_parent"
+		android:layout_height="wrap_content"
+		android:theme="@style/AppTheme.AppBarOverlay">
+
+		<android.support.v7.widget.Toolbar
+			android:id="@+id/toolbar"
+			android:layout_width="match_parent"
+			android:layout_height="?attr/actionBarSize"
+			android:background="?attr/colorPrimary"
+			app:popupTheme="@style/AppTheme.PopupOverlay">
+
+			<ImageView
+				android:id="@+id/repositoryCommitImgOk"
+				android:src="@drawable/ic_done_black_24dp"
+				style="@style/AppTheme.ToolbarIndicator.Right"/>
+
+		</android.support.v7.widget.Toolbar>
+
+	</android.support.design.widget.AppBarLayout>
+
+	<android.support.constraint.ConstraintLayout
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:padding="@dimen/activity_padding">
+		
+		<android.support.design.widget.TextInputLayout
+			android:id="@+id/repositoryCommitEdtLayMessage"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			app:layout_constraintTop_toTopOf="parent"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:theme="@style/AppTheme.TextInputLayout.primary"
+			app:errorEnabled="false">
+
+			<android.support.design.widget.TextInputEditText
+				android:id="@+id/repositoryCommitEdtMessage"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:hint="@string/commit_message"
+				android:inputType="textMultiLine"
+				android:selectAllOnFocus="true" />
+			
+		</android.support.design.widget.TextInputLayout>
+		
+		<LinearLayout
+			style="@style/AppTheme.SelectableItem"
+			android:id="@+id/repositoryCommitLayAuthor"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/spacing_middle"
+			android:paddingBottom="@dimen/spacing_middle"
+			android:orientation="horizontal"
+			app:layout_constraintTop_toBottomOf="@id/repositoryCommitEdtLayMessage"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent">
+			
+			<ImageView
+				android:id="@+id/repositoryCommitImgAuthor"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_person_black_24dp"
+				android:tint="@color/grey600"/>
+			
+			<TextView
+				android:id="@+id/repositoryCommitTxtAuthor"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="@dimen/spacing_middle"
+				android:text="@string/pick_author"
+				android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+		
+		</LinearLayout>
+		
+		<LinearLayout
+			style="@style/AppTheme.SelectableItem"
+			android:id="@+id/repositoryCommitLayCommitter"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:paddingTop="@dimen/spacing_middle"
+			android:paddingBottom="@dimen/spacing_middle"
+			android:orientation="horizontal"
+			app:layout_constraintTop_toBottomOf="@id/repositoryCommitLayAuthor"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent">
+
+			<ImageView
+				android:id="@+id/repositoryCommitImgCommitter"
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:src="@drawable/ic_person_black_24dp"
+				android:tint="@color/grey600"/>
+
+			<TextView
+				android:id="@+id/repositoryCommitTxtCommitter"
+				android:layout_width="match_parent"
+				android:layout_height="wrap_content"
+				android:layout_marginLeft="@dimen/spacing_middle"
+				android:text="@string/pick_committer_optional"
+				android:textAppearance="@style/TextAppearance.AppCompat.Medium"/>
+
+		</LinearLayout>
+		
+		<CheckBox
+			android:id="@+id/repositoryCommitChkAddAll"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/spacing_small"
+			app:layout_constraintTop_toBottomOf="@id/repositoryCommitLayCommitter"
+			app:layout_constraintLeft_toLeftOf="parent"/>
+		
+		<TextView 
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/spacing_small"
+			android:text="@string/commit_add_all"
+			app:layout_constraintTop_toTopOf="@id/repositoryCommitChkAddAll"
+			app:layout_constraintLeft_toRightOf="@id/repositoryCommitChkAddAll"/>
+		
+		<!--
+		<TextView 
+			android:id="@+id/repositoryCommitTxtAdvance"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_marginTop="@dimen/spacing_middle"
+			android:text="@string/advanced_option"
+			app:layout_constraintTop_toBottomOf="@id/repositoryCommitChkAddAll"
+			app:layout_constraintLeft_toLeftOf="parent"/>
+		
+		<ImageView 
+			android:id="@+id/repositoryCommitImgAdvance"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:src="@drawable/ic_expand_more_black_24dp"
+			app:layout_constraintTop_toTopOf="@id/repositoryCommitTxtAdvance"
+			app:layout_constraintRight_toRightOf="parent"/>
+		
+		<android.support.constraint.ConstraintLayout
+			android:layout_width="0dp"
+			android:layout_height="0dp"
+			app:layout_constraintTop_toBottomOf="@id/repositoryCommitTxtAdvance"
+			app:layout_constraintLeft_toLeftOf="parent"
+			app:layout_constraintRight_toRightOf="parent"
+			app:layout_constraintBottom_toBottomOf="parent">
+			
+		
+		</android.support.constraint.ConstraintLayout>
+		-->
+		
+	</android.support.constraint.ConstraintLayout>
+	
+</LinearLayout>
