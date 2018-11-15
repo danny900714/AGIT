@@ -7,7 +7,7 @@ android {
 
     defaultConfig {
         applicationId "com.danny.agit"
-        minSdkVersion 14
+        minSdkVersion 15
         targetSdkVersion 23
         versionCode 1
         versionName "1.0"
@@ -37,9 +37,4 @@ dependencies {
 	
 	// apache io library
 	compile 'commons-io:commons-io:+'
-}
-
-javadoc {
-    source = sourceSets.main.allJava
-    classpath = configurations.compile
 }

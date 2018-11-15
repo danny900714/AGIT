@@ -50,4 +50,9 @@
 	<string name="add_remote">Add remote</string>
 	<string name="name">Name</string>
 	<string name="url">URL</string>
+	<string name="search_language_hint">Search a language</string>
+	<string name="choose_language">Choose a language</string>
+	<string name="add_language">Add language</string>
+	<string name="gitignore_exists">.gitignore has already existed</string>
+	<string name="gitignore_successfully_created">.gitignore has successfully been created</string>
 </resources>

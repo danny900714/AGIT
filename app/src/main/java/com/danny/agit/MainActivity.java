@@ -23,6 +23,7 @@ import android.content.pm.*;
 import android.*;
 import java.util.*;
 import android.support.v4.app.ActivityCompat;
+import com.danny.tools.git.gitignore.*;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener  {
     

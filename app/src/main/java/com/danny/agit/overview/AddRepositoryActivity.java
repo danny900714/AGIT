@@ -181,17 +181,6 @@ public class AddRepositoryActivity extends AppCompatActivity
 	}
 	
 	private void createRepository(final String sName, final String sPath) {
-		/*try {
-			Git git = Git.init().setDirectory(new File(sPath)).call();
-		} catch (GitAPIException e) {
-			Toast.makeText(AddRepositoryActivity.this, R.string.err_message, Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		} catch (IllegalStateException e) {
-			Toast.makeText(AddRepositoryActivity.this, R.string.err_message, Toast.LENGTH_LONG).show();
-			e.printStackTrace();
-		} finally {
-			Toast.makeText(AddRepositoryActivity.this, R.string.create_repository_success, Toast.LENGTH_SHORT).show();
-		}*/
 		InitAsyncTask initTask = new InitAsyncTask(AddRepositoryActivity.this);
 		initTask.setOnTaskFinishListener(new InitAsyncTask.onTaskFinishListener() {
 			@Override

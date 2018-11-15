@@ -26,8 +26,9 @@ import com.danny.tools.git.push.*;
 import com.danny.tools.git.push.PushAsyncTask.*;
 import android.widget.Toast;
 import com.danny.tools.data.auth.*;
+import com.danny.tools.git.gitignore.*;
 
-public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener
+public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener
 {
 	public static final String PARAM_NAME = "NAME";
 	public static final String PARAM_PATH = "PATH";
@@ -142,6 +143,10 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 				AuthRecordDao authDao = new AuthRecordDao(RepositoryActivity.this);
 				authDao.copyDbTo("/storage/emulated/0/AGIT/debug/database");
 				return true;
+			case R.id.addLanguage:
+				AddLanguageDialog languageDialog = new AddLanguageDialog();
+				languageDialog.show(getSupportFragmentManager(), AddLanguageDialog.TAG);
+				return true;
 		}
 		return super.onOptionsItemSelected(item);
 	}
@@ -198,6 +203,25 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		
 		// push task
 		push();
+	}
+
+	@Override
+	public void onLanguageReceive(String language) {
+		GitignoreManager manager = new GitignoreManager(RepositoryActivity.this);
+		File dest = new File(paramPath + File.separator + GitignoreManager.EXTENTION);
+		
+		if (dest.exists()) {
+			Toast.makeText(RepositoryActivity.this, R.string.gitignore_exists, Toast.LENGTH_LONG).show();
+			return;
+		}
+		
+		manager.copyGitignoreTo(language, dest.toString());
+		Toast.makeText(RepositoryActivity.this, R.string.gitignore_successfully_created, Toast.LENGTH_SHORT).show();
+		Fragment fragment = adapter.getItem(0);
+		if (fragment instanceof RepositoryFileFragment) {
+			RepositoryFileFragment fileFragment = (RepositoryFileFragment) fragment;
+			fileFragment.refreshFileList();
+		}
 	}
 	
 	private View.OnClickListener onFabCommitClick = new View.OnClickListener() {

@@ -22,6 +22,7 @@ public class RepositoryFileFragment extends Fragment
 	
 	private String argPath;
 	private String argPathParent;
+	private File currentDirectory;
 	private File parent;
 	
 	private RepositoryFileRecyclerAdapter adapter;
@@ -33,17 +34,11 @@ public class RepositoryFileFragment extends Fragment
         fragment.setArguments(args);
         return fragment;
     }
-
-	/*@Override
-	public void onAttach(Activity activity)
-	{
-		super.onAttach(activity);
-		try {
-			mListener = (InteractionListener) activity;
-		} catch (ClassCastException e) {
-			e.printStackTrace();
-		}
-	}*/
+	
+	public void refreshFileList() {
+		ArrayList<RepositoryFileRecyclerAdapter.Data> dataList = getDataList(currentDirectory.toString());
+		adapter.updateDataList(dataList);
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,6 +71,7 @@ public class RepositoryFileFragment extends Fragment
 		// set dataList
 		ArrayList<RepositoryFileRecyclerAdapter.Data> dataList = getDataList(argPath);
 		adapter.updateDataList(dataList);
+		currentDirectory = new File(argPath);
 	}
 	
 	boolean onBackPressed() {
@@ -84,6 +80,7 @@ public class RepositoryFileFragment extends Fragment
 		
 		ArrayList<RepositoryFileRecyclerAdapter.Data> dataList = getDataList(parent.getPath());
 		adapter.updateDataList(dataList);
+		currentDirectory = parent;
 		parent = parent.getParentFile();
 		return true;
 	}
@@ -146,6 +143,7 @@ public class RepositoryFileFragment extends Fragment
 			} else {
 				ArrayList<RepositoryFileRecyclerAdapter.Data> dataList = getDataList(data.getPath());
 				adapter.updateDataList(dataList);
+				currentDirectory = new File(data.getPath());
 				parent = file.getParentFile();
 			}
 		}
