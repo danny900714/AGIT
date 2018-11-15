@@ -14,6 +14,7 @@ import com.danny.agit.*;
 import android.widget.*;
 import com.danny.tools.*;
 import android.util.*;
+import java.util.*;
 
 public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.Progress, PushAsyncTask.Result>
 {
@@ -52,7 +53,9 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 
 	@Override
 	protected PushAsyncTask.Result doInBackground(PushAsyncTask.Param[] params) {
-		// check connectivity state
+		// check connectivity status
+		Result successResult = new Result(true);
+		
 		if (!checkConnectivity())
 			return new Result(false, Result.ERR_RES_NO_CONNECTION);
 		
@@ -67,7 +70,16 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 				if (!param.isAuthIgnored)
 					pushCommand = pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(param.username, param.password));
 				
+				//Iterable<PushResult> resultIterator = 
 				pushCommand.call();
+				
+				/*for (PushResult result: resultIterator) {
+					Collection<RemoteRefUpdate> remoteUpdates = result.getRemoteUpdates();
+					for (RemoteRefUpdate ref: remoteUpdates) {
+						successResult.message = ref.getMessage();
+						Log.i(PushAsyncTask.class.getName(), "message: " + ref.getMessage());
+					}
+				}*/
 			} catch (IOException e) {
 				e.printStackTrace();
 				return new Result(false, e);
@@ -76,7 +88,7 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 				return new Result(false, e);
 			}
 		}
-		return new Result(true);
+		return successResult;
 	}
 
 	@Override
@@ -168,6 +180,15 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 		NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
 		boolean isConnected = activeNetwork != null && activeNetwork.isConnectedOrConnecting();
 		return isConnected;
+	}
+	
+	private void showResultDialog(String message) {
+		AlertDialog.Builder builder = new AlertDialog.Builder(activity, R.style.AppTheme_AlertDialog_ColorAccent);
+		AlertDialog dialog = builder.setTitle(R.string.push)
+			.setMessage(message)
+			.setPositiveButton(android.R.string.ok, null)
+			.create();
+		dialog.show();
 	}
 	
 	public interface onTaskFinishListener {

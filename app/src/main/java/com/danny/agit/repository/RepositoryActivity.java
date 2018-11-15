@@ -35,7 +35,6 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	
 	private String paramName;
 	private String paramPath;
-	private AuthRecordDao authRecordDao;
 	
 	// push data
 	private String sPushName;
@@ -120,9 +119,6 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		// init listener
 		mFabCommit.setOnClickListener(onFabCommitClick);
 		mImgRemote.setOnClickListener(onImgRemoteClick);
-		
-		// init dao
-		authRecordDao = new AuthRecordDao(RepositoryActivity.this);
 	}
 
 	@Override
@@ -180,7 +176,9 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		this.sPushName = name;
 		this.isPushAll = isPushAll;
 		
+		AuthRecordDao authRecordDao = new AuthRecordDao(RepositoryActivity.this);
 		AuthRecord authRecord = authRecordDao.get(paramName, sPushName);
+		authRecordDao.close();
 		
 		if (authRecord == null) {
 			AuthDialog authDialog = new AuthDialog();
@@ -269,11 +267,12 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		@Override
 		public void onTaskFinish(PushAsyncTask.Result result){
 			if (result.isSuccess() && isSaved) {
+				AuthRecordDao authRecordDao = new AuthRecordDao(RepositoryActivity.this);
 				if (authRecordDao.get(paramName, sPushName) == null) {
 					AuthRecord auth = new AuthRecord(paramName, sPushName, sUsername, sPassword, isAuthIgnored);
 					auth = authRecordDao.insert(auth);
-					authRecordDao.copyDbTo("/storage/emulated/0/AGIT/debug/database");
 				}
+				authRecordDao.close();
 			}
 		}
 	};

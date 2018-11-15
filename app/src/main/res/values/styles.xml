@@ -53,6 +53,10 @@
 		<item name="colorAccent">@color/colorAccent</item>
 	</style>
 	
+	<style name="AppTheme.AlertDialog.ColorAccent" parent="ThemeOverlay.AppCompat.Dialog.Alert">
+		<item name="colorAccent">@color/colorAccentDark</item>
+	</style>
+	
 	<style name="AppTheme.ProgressDialog" parent="ThemeOverlay.AppCompat.Dialog.Alert"></style>
 	
 	<style name="AppTheme.ProgressDialog.ColorAccent" parent="AppTheme.ProgressDialog">
