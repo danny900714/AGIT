@@ -55,4 +55,6 @@
 	<string name="add_language">Add language</string>
 	<string name="gitignore_exists">.gitignore has already existed</string>
 	<string name="gitignore_successfully_created">.gitignore has successfully been created</string>
+	<string name="add_gitignore">Add .gitignore:\u0020</string>
+	<string name="none">None</string>
 </resources>

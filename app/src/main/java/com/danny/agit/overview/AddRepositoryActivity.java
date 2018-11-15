@@ -24,8 +24,11 @@ import org.eclipse.jgit.api.*;
 import org.eclipse.jgit.api.errors.*;
 import com.danny.tools.data.repository.*;
 import com.danny.tools.git.commit.*;
+import android.support.constraint.ConstraintLayout;
+import com.danny.agit.repository.*;
+import com.danny.tools.git.gitignore.*;
 
-public class AddRepositoryActivity extends AppCompatActivity
+public class AddRepositoryActivity extends AppCompatActivity implements AddLanguageDialog.OnReceiveListener
 {
 	public static final int REQUEST_CODE = 1;
 	public static final int RETURN_CODE_CLONE = 3;
@@ -39,11 +42,14 @@ public class AddRepositoryActivity extends AppCompatActivity
 	private int action;
 	
 	private RepositoryRecordDao recordDao;
+	private String sLanguage;
 	
 	private ImageView mImgOk;
 	private TextInputEditText mEdtName, mEdtLocation, mEdtUrl;
 	private TextInputLayout mEdtLayName, mEdtLayLocation, mEdtLayUrl;
 	private Button mBtnBrowse;
+	private ConstraintLayout mLayLanguage;
+	private TextView mTxtLanguage;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,14 +79,22 @@ public class AddRepositoryActivity extends AppCompatActivity
 		mEdtLocation = findViewById(R.id.addRepositoryEdtLocation);
 		mEdtUrl = findViewById(R.id.addRepositoryEdtUrl);
 		mBtnBrowse = findViewById(R.id.addRepositoryBtnBrowse);
+		mLayLanguage = findViewById(R.id.addRepositoryLayLanguage);
+		mTxtLanguage = findViewById(R.id.addRepositoryTxtLanguage);
 		
 		// init visibilities
 		if (action == R.string.clone_repository)
 			mEdtLayUrl.setVisibility(View.VISIBLE);
+		if (action == R.string.create_repository) {
+			mLayLanguage.setVisibility(View.VISIBLE);
+			String rawText = getString(R.string.add_gitignore);
+			mTxtLanguage.setText(Html.fromHtml(rawText + "<b>" + getString(R.string.none) + "</b>"));
+		}
 		
 		// init listeners
 		mImgOk.setOnClickListener(onImgDoneClick);
 		mBtnBrowse.setOnClickListener(onBtnBrowseClick);
+		mLayLanguage.setOnClickListener(onLayLanguageClick);
 		
 		// init db
 		recordDao = new RepositoryRecordDao(AddRepositoryActivity.this);
@@ -114,6 +128,13 @@ public class AddRepositoryActivity extends AppCompatActivity
 		finish();
 		return false;
 	}
+
+	@Override
+	public void onLanguageReceive(String language) {
+		this.sLanguage = language;
+		String sRawText = getString(R.string.add_gitignore);
+		mTxtLanguage.setText(Html.fromHtml(sRawText + "<b>" + language + "</b>"));
+	}
 	
 	private View.OnClickListener onImgDoneClick = new View.OnClickListener(){
 		@Override
@@ -127,7 +148,8 @@ public class AddRepositoryActivity extends AppCompatActivity
 					new CloneAsyncTask(AddRepositoryActivity.this).execute(param);
 				} else if (action == R.string.create_repository) {
 					createRepository(sName, sLocation);
-					//addRecordToDb(sName, sLocation);
+					if (sLanguage != null)
+						addGitignore(sLocation);
 					finish();
 				} else if (action == R.string.import_repository) {
 					addRecordToDb(sName, sLocation);
@@ -143,6 +165,14 @@ public class AddRepositoryActivity extends AppCompatActivity
 			Intent it = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
 			it.addCategory(Intent.CATEGORY_DEFAULT);
 			startActivityForResult(Intent.createChooser(it, "Choose Directory"), REQUEST_FILE_CHOOSER);
+		}
+	};
+	
+	private View.OnClickListener onLayLanguageClick = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			AddLanguageDialog languageDialog = new AddLanguageDialog();
+			languageDialog.show(getSupportFragmentManager(), AddLanguageDialog.TAG);
 		}
 	};
 	
@@ -196,5 +226,17 @@ public class AddRepositoryActivity extends AppCompatActivity
 	private void addRecordToDb(String sName, String sPath) {
 		RepositoryRecord record = new RepositoryRecord(sName, sPath);
 		recordDao.insert(record);
+	}
+	
+	private void addGitignore(String path) {
+		GitignoreManager manager = new GitignoreManager(AddRepositoryActivity.this);
+		File dest = new File(path + File.separator + GitignoreManager.EXTENTION);
+
+		if (dest.exists()) {
+			Toast.makeText(AddRepositoryActivity.this, R.string.gitignore_exists, Toast.LENGTH_LONG).show();
+			return;
+		}
+
+		manager.copyGitignoreTo(sLanguage, dest.toString());
 	}
 }
