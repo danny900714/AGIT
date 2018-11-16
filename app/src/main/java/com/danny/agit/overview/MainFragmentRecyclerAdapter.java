@@ -19,14 +19,13 @@ import com.danny.agit.repository.*;
 public class MainFragmentRecyclerAdapter extends RecyclerView.Adapter<MainFragmentRecyclerAdapter.ViewHolder>
 {
 	private Context context;
-	private RepositoryRecordDao recordDao;
 	private View.OnClickListener onItemClick;
 	
 	private ArrayList<Adapter> adapterList = new ArrayList<>();
 
 	public MainFragmentRecyclerAdapter(Context context, View.OnClickListener onItemClick) {
 		this.context = context;
-		this.recordDao = new RepositoryRecordDao(context);
+		RepositoryRecordDao recordDao = new RepositoryRecordDao(context);
 		this.onItemClick = onItemClick;
 		
 		ArrayList<RepositoryRecord> recordList = (ArrayList<RepositoryRecord>) recordDao.getAllInverse();
@@ -46,6 +45,8 @@ public class MainFragmentRecyclerAdapter extends RecyclerView.Adapter<MainFragme
 				ExceptionUtils.toastException(context, e);
 			}
 		}
+		
+		recordDao.close();
 	}
 	
 	@Override
@@ -96,6 +97,7 @@ public class MainFragmentRecyclerAdapter extends RecyclerView.Adapter<MainFragme
 	
 	public void updateData() {
 		ArrayList<Adapter> adapterList = new ArrayList<>();
+		RepositoryRecordDao recordDao = new RepositoryRecordDao(context);
 		
 		ArrayList<RepositoryRecord> recordList = (ArrayList<RepositoryRecord>) recordDao.getAllInverse();
 		for (RepositoryRecord record: recordList) {
@@ -117,6 +119,8 @@ public class MainFragmentRecyclerAdapter extends RecyclerView.Adapter<MainFragme
 		
 		this.adapterList = adapterList;
 		notifyDataSetChanged();
+		
+		recordDao.close();
 	}
 	
 	public Adapter getChildData(int position) {

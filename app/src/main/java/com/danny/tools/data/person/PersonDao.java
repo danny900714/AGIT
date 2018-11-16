@@ -26,15 +26,12 @@ public class PersonDao extends BaseDao<Person>
 	COLUMN_EMAIL + " TEXT NOT NULL, " +
 	COLUMN_PROFILE_PATH + " TEXT )";
 	
-	private Context context;
-	
 	public PersonDao(Context context) {
-		super(TABLE_NAME, KEY_ID);
-		this.context = context;
+		super(TABLE_NAME, KEY_ID, context);
 	}
 
 	@Override
-	protected SQLiteDatabase getDatabase() {
+	protected SQLiteDatabase getDatabase(Context context) {
 		return GitDatabaseOpenHelper.getDatabase(this.context);
 	}
 

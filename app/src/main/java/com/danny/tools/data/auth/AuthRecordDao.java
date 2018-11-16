@@ -28,11 +28,8 @@ public class AuthRecordDao extends BaseDao<AuthRecord>
 	COLUMN_PASSWORD + " TEXT, " +
 	COLUMN_IS_IGNORE + " INTEGER DEFAULT 0)";
 	
-	private Context context;
-	
 	public AuthRecordDao(Context context) {
-		super(TABLE_NAME, KEY_ID);
-		this.context = context;
+		super(TABLE_NAME, KEY_ID, context);
 	}
 	
 	public AuthRecord get(String repositoryName, String remoteName) {
@@ -63,8 +60,8 @@ public class AuthRecordDao extends BaseDao<AuthRecord>
 	}
 
 	@Override
-	protected SQLiteDatabase getDatabase() {
-		return GitDatabaseOpenHelper.getDatabase(this.context);
+	protected SQLiteDatabase getDatabase(Context context) {
+		return GitDatabaseOpenHelper.getDatabase(context);
 	}
 
 	@Override

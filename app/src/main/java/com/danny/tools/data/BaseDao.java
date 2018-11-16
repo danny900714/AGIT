@@ -12,11 +12,13 @@ public abstract class BaseDao<T>
 	public final String KEY_ID;
 	
 	protected SQLiteDatabase db;
+	protected Context context;
 	
-	protected BaseDao(String TABLE_NAME, String KEY_ID) {
+	protected BaseDao(String TABLE_NAME, String KEY_ID, Context context) {
 		this.TABLE_NAME = TABLE_NAME;
 		this.KEY_ID = KEY_ID;
-		this.db = getDatabase();
+		this.context = context;
+		this.db = getDatabase(context);
 	}
 	
 	public void close() {
@@ -93,7 +95,7 @@ public abstract class BaseDao<T>
 	
 	protected abstract ContentValues getContentValues(T data);
 	
-	protected abstract SQLiteDatabase getDatabase();
+	protected abstract SQLiteDatabase getDatabase(Context context);
 	
 	protected abstract long getId(T data);
 

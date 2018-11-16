@@ -70,16 +70,12 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 				if (!param.isAuthIgnored)
 					pushCommand = pushCommand.setCredentialsProvider(new UsernamePasswordCredentialsProvider(param.username, param.password));
 				
-				//Iterable<PushResult> resultIterator = 
-				pushCommand.call();
+				Iterable<PushResult> resultIterator = pushCommand.call();
 				
-				/*for (PushResult result: resultIterator) {
+				for (PushResult result: resultIterator) {
 					Collection<RemoteRefUpdate> remoteUpdates = result.getRemoteUpdates();
-					for (RemoteRefUpdate ref: remoteUpdates) {
-						successResult.message = ref.getMessage();
-						Log.i(PushAsyncTask.class.getName(), "message: " + ref.getMessage());
-					}
-				}*/
+					successResult.updateCollection = remoteUpdates;
+				}
 			} catch (IOException e) {
 				e.printStackTrace();
 				return new Result(false, e);
@@ -128,8 +124,13 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 		if (listener != null)
 			listener.onTaskFinish(result);
 		
-		if (result.isSuccess)
-			Toast.makeText(activity, R.string.push_success, Toast.LENGTH_SHORT).show();
+		if (result.isSuccess) {
+			StringBuilder builder = new StringBuilder();
+			for (RemoteRefUpdate update: result.updateCollection) {
+				builder.append(parseRemoteRefUpdate(update));
+			}
+			showResultDialog(builder.toString());
+		}
 		else {
 			if (result.stringRes != 0)
 				Toast.makeText(activity, result.message, Toast.LENGTH_LONG).show();
@@ -190,6 +191,45 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 			.create();
 		dialog.show();
 	}
+	
+	private String parseRemoteRefUpdate(RemoteRefUpdate update) {
+        String msg = null;
+        switch (update.getStatus()) {
+            case AWAITING_REPORT:
+				msg = String.format(activity.getString(R.string.push_result_awaiting_report), update.getRemoteName());
+                break;
+            case NON_EXISTING:
+				msg = String.format(activity.getString(R.string.push_result_non_existing), update.getRemoteName());
+                break;
+            case NOT_ATTEMPTED:
+				msg = String.format(activity.getString(R.string.push_result_not_attempted), update.getRemoteName());
+                break;
+            case OK:
+				msg = String.format(activity.getString(R.string.push_result_ok), update.getRemoteName());
+                break;
+            case REJECTED_NODELETE:
+				msg = String.format(activity.getString(R.string.push_result_rejected_nodelete), update.getRemoteName());
+                break;
+            case REJECTED_NONFASTFORWARD:
+				msg = String.format(activity.getString(R.string.push_result_rejected_nonfastforward), update.getRemoteName());
+				break;
+            case REJECTED_OTHER_REASON:
+                String reason = update.getMessage();
+                if (reason == null || reason.isEmpty()) {
+					msg = String.format(activity.getString(R.string.push_result_rejected_other_reason), update.getRemoteName());
+                } else {
+					msg = String.format(activity.getString(R.string.push_reslut_rejected_other_message), update.getRemoteName(), reason);
+                }
+                break;
+            case REJECTED_REMOTE_CHANGED:
+				msg = String.format(activity.getString(R.string.push_result_rejected_remote_changed), update.getRemoteName());
+                break;
+            case UP_TO_DATE:
+				msg = String.format(activity.getString(R.string.push_result_up_to_date), update.getRemoteName());
+                break;
+        }
+        return msg;
+    }
 	
 	public interface onTaskFinishListener {
 		public void onTaskFinish(Result result);
@@ -307,6 +347,7 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 		public static final int ERR_RES_NO_CONNECTION = R.string.err_no_internet;
 		
 		private boolean isSuccess;
+		private Collection<RemoteRefUpdate> updateCollection;
 		private String message;
 		private int stringRes;
 		private Exception e;

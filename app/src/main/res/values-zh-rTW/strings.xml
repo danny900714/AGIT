@@ -13,4 +13,14 @@
 	<string name="err_directory_exists">資料夾已經存在</string>
 	<string name="err_no_internet">請確認網路連線</string>
 	<string name="create_repository_success">Git 儲存庫建立成功</string>
+	<string name="push_result_awaiting_report">[%1$s] Push 操作正在等候遠端儲存庫的更新報告\n</string>
+	<string name="push_result_non_existing">[%1$s] 遠端位置不存在\n</string>
+	<string name="push_result_not_attempted">[%1$s] Push 操作尚未更新\n</string>
+	<string name="push_result_ok">[%1$s] Push 操作成功.\n</string>
+	<string name="push_result_rejected_nodelete">[%1$s] 遠端更新被拒，因為遠端並不支援或允許刪除資料\n</string>
+	<string name="push_result_rejected_nonfastforward">[%1$s] 遠端更新被拒，因為上傳內容會造成 non fast-forward 更新\n</string>
+	<string name="push_result_rejected_other_reason">[%1$s] 遠端更新被拒\n</string>
+	<string name="push_reslut_rejected_other_message">[%1$s] 遠端更新被拒，因為 %2$s\n</string>
+	<string name="push_result_rejected_remote_changed">[%1$s] 遠端更新被拒，因為遠端儲存庫舊有的物件id和定義的就有id不同\n</string>
+	<string name="push_result_up_to_date">[%1$s] 遠端儲存庫的資料已經是最新版本\n</string>
 </resources>
