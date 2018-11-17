@@ -27,6 +27,7 @@ import com.danny.tools.git.commit.*;
 import android.support.constraint.ConstraintLayout;
 import com.danny.agit.repository.*;
 import com.danny.tools.git.gitignore.*;
+import com.danny.tools.git.repository.*;
 
 public class AddRepositoryActivity extends AppCompatActivity implements AddLanguageDialog.OnReceiveListener
 {
@@ -152,8 +153,12 @@ public class AddRepositoryActivity extends AppCompatActivity implements AddLangu
 						addGitignore(sLocation);
 					finish();
 				} else if (action == R.string.import_repository) {
-					addRecordToDb(sName, sLocation);
-					finish();
+					File gitFolder = new File(sLocation + "/.git");
+					if (gitFolder.exists()) {
+						addRecordToDb(sName, sLocation);
+						finish();
+					} else 
+						Toast.makeText(AddRepositoryActivity.this, R.string.repository_import_err, Toast.LENGTH_LONG).show();
 				}
 			}
 		}

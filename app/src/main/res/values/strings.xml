@@ -67,4 +67,5 @@
 	<string name="push_reslut_rejected_other_message">[%1$s] Remote ref update was rejected, because %2$s.\n</string>
 	<string name="push_result_rejected_remote_changed">[%1$s] Remote ref update was rejected, because old object id on remote repository wasn\'t the same as defined expected old object.\n</string>
 	<string name="push_result_up_to_date">[%1$s] remote ref is up to date.\n</string>
+	<string name="repository_import_err">Can\'t find the git repository, please create a new one</string>
 </resources>

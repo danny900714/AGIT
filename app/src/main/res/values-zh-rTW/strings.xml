@@ -16,7 +16,7 @@
 	<string name="push_result_awaiting_report">[%1$s] Push 操作正在等候遠端儲存庫的更新報告\n</string>
 	<string name="push_result_non_existing">[%1$s] 遠端位置不存在\n</string>
 	<string name="push_result_not_attempted">[%1$s] Push 操作尚未更新\n</string>
-	<string name="push_result_ok">[%1$s] Push 操作成功.\n</string>
+	<string name="push_result_ok">[%1$s] Push 操作成功\n</string>
 	<string name="push_result_rejected_nodelete">[%1$s] 遠端更新被拒，因為遠端並不支援或允許刪除資料\n</string>
 	<string name="push_result_rejected_nonfastforward">[%1$s] 遠端更新被拒，因為上傳內容會造成 non fast-forward 更新\n</string>
 	<string name="push_result_rejected_other_reason">[%1$s] 遠端更新被拒\n</string>
