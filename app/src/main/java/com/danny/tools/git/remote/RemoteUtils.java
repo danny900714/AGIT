@@ -68,4 +68,41 @@ public class RemoteUtils
 			return null;
 		}
 	}
+	
+	public static String getFetch(Repository repository, String name) {
+		StoredConfig config = repository.getConfig();
+		return config.getString("remote", name, "fetch");
+	}
+	
+	public static String getFetch(File directory, String name) {
+		try {
+			return getFetch(RepositoryUtils.openRepository(directory), name);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static String getFetch(String path, String name) {
+		try {
+			return getFetch(RepositoryUtils.openRepository(path), name);
+		} catch (IOException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+	
+	public static void addFetch(Repository repository, String name, String value) throws IOException {
+		StoredConfig config = repository.getConfig();
+		config.setString("remote", name, "fetch", value);
+		config.save();
+	}
+	
+	public static void addFetch(File direction, String name, String value) throws IOException {
+		addFetch(RepositoryUtils.openRepository(direction), name, value);
+	}
+	
+	public static void addFetch(String path, String name, String value) throws IOException {
+		addFetch(RepositoryUtils.openRepository(path), name, value);
+	}
 }

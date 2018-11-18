@@ -79,5 +79,7 @@
 	<string name="fetch_result_rejected">[%1$s] Not a fast-forward and not stored.</string>
 	<string name="fetch_result_rejected_current_branch">[%1$s] Rejected because trying to delete the current branch.</string>
 	<string name="fetch_result_renamed">[%1$s] The ref was renamed from another name</string>
-	
+	<string name="pull">Pull</string>
+	<string name="pull_result">Pull result:\u020</string>
+	<string name="rebase_after_fetch">Rebase after fetch</string>
 </resources>
