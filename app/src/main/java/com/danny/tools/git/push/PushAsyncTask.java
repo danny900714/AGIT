@@ -148,13 +148,11 @@ public class PushAsyncTask extends AsyncTask<PushAsyncTask.Param, PushAsyncTask.
 
 		@Override
 		public void start(int totalTasks) {
-			Log.i(ProgressMonitor.class.getName(), "totalTasks = " + totalTasks);
+			
 		}
 
 		@Override
 		public void beginTask(String title, int totalWorks) {
-			Log.i(ProgressMonitor.class.getName(), "title = " + title);
-			Log.i(ProgressMonitor.class.getName(), "totalWorks = " + totalWorks);
 			publishProgress(new Progress(title, totalWorks));
 			totalCompleted = 0;
 		}

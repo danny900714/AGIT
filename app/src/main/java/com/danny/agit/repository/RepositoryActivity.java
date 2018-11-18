@@ -27,22 +27,32 @@ import com.danny.tools.git.push.PushAsyncTask.*;
 import android.widget.Toast;
 import com.danny.tools.data.auth.*;
 import com.danny.tools.git.gitignore.*;
+import com.danny.tools.git.fetch.*;
+import com.danny.tools.git.fetch.FetchAsyncTask.*;
 
-public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener
+public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener
 {
 	public static final String PARAM_NAME = "NAME";
 	public static final String PARAM_PATH = "PATH";
 	
 	private String paramName;
 	private String paramPath;
+	private Operation currentOperation; 
 	
-	// push data
+	// auth
+	private boolean isAuthSaved;
+	private boolean isAuthIgnored;
+	
+	// push
 	private String sPushName;
 	private boolean isPushAll;
-	private String sUsername;
-	private String sPassword;
-	private boolean isSaved;
-	private boolean isAuthIgnored;
+	private String sPushUsername;
+	private String sPushPassword;
+	
+	// fetch
+	private String sFetchName;
+	private String sFetchUsername;
+	private String sFetchPassword;
 	
 	private TabLayout mTabLayout;
 	private ViewPager mViewPager;
@@ -175,6 +185,7 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	public void onGetPushData(String name, boolean isPushAll) {
 		this.sPushName = name;
 		this.isPushAll = isPushAll;
+		currentOperation = Operation.PUSH;
 		
 		AuthRecordDao authRecordDao = new AuthRecordDao(RepositoryActivity.this);
 		AuthRecord authRecord = authRecordDao.get(paramName, sPushName);
@@ -184,8 +195,8 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 			AuthDialog authDialog = new AuthDialog();
 			authDialog.show(getSupportFragmentManager(), AuthDialog.TAG);
 		} else {
-			sUsername = authRecord.getUserName();
-			sPassword = authRecord.getPassword();
+			sPushUsername = authRecord.getUserName();
+			sPushPassword = authRecord.getPassword();
 			isAuthIgnored = authRecord.isIgnored();
 			push();
 		}
@@ -194,13 +205,21 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	@Override
 	public void onGetPushAuthData(String username, String password, boolean isSaved, boolean isIgnored) {
 		// set data
-		this.sUsername = username;
-		this.sPassword = password;
-		this.isSaved = isSaved;
+		this.isAuthSaved = isSaved;
 		this.isAuthIgnored = isIgnored;
 		
-		// push task
-		push();
+		switch (currentOperation) {
+			case PUSH:
+				this.sPushUsername = username;
+				this.sPushPassword = password;
+				push();
+				break;
+			case FETCH:
+				this.sFetchUsername = username;
+				this.sPushPassword = password;
+				fetch();
+				break;
+		}
 	}
 
 	@Override
@@ -219,6 +238,26 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		if (fragment instanceof RepositoryFileFragment) {
 			RepositoryFileFragment fileFragment = (RepositoryFileFragment) fragment;
 			fileFragment.refreshFileList();
+		}
+	}
+
+	@Override
+	public void onFetchReceive(String remoteName) {
+		sFetchName = remoteName;
+		currentOperation = Operation.FETCH;
+		
+		AuthRecordDao authRecordDao = new AuthRecordDao(RepositoryActivity.this);
+		AuthRecord authRecord = authRecordDao.get(paramName, sFetchName);
+		authRecordDao.close();
+
+		if (authRecord == null) {
+			AuthDialog authDialog = new AuthDialog();
+			authDialog.show(getSupportFragmentManager(), AuthDialog.TAG);
+		} else {
+			sFetchUsername = authRecord.getUserName();
+			sFetchPassword = authRecord.getPassword();
+			isAuthIgnored = authRecord.isIgnored();
+			fetch();
 		}
 	}
 	
@@ -255,6 +294,13 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 							AddRemoteDialog addRemoteDialog = new AddRemoteDialog();
 							addRemoteDialog.show(getSupportFragmentManager(), AddRemoteDialog.TAG);
 							return true;
+						case R.id.fetch:
+							FetchDialog fetchDialog = new FetchDialog();
+							Bundle args2 = new Bundle();
+							args2.putString(FetchDialog.ARG_KEY_PATH, paramPath);
+							fetchDialog.setArguments(args2);
+							fetchDialog.show(getSupportFragmentManager(), FetchDialog.TAG);
+							return true;
 					}
 					return false;
 				}
@@ -266,10 +312,24 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	private PushAsyncTask.onTaskFinishListener onPushFinish = new PushAsyncTask.onTaskFinishListener() {
 		@Override
 		public void onTaskFinish(PushAsyncTask.Result result){
-			if (result.isSuccess() && isSaved) {
+			if (result.isSuccess() && isAuthSaved) {
 				AuthRecordDao authRecordDao = new AuthRecordDao(RepositoryActivity.this);
 				if (authRecordDao.get(paramName, sPushName) == null) {
-					AuthRecord auth = new AuthRecord(paramName, sPushName, sUsername, sPassword, isAuthIgnored);
+					AuthRecord auth = new AuthRecord(paramName, sPushName, sPushUsername, sPushPassword, isAuthIgnored);
+					auth = authRecordDao.insert(auth);
+				}
+				authRecordDao.close();
+			}
+		}
+	};
+	
+	private FetchAsyncTask.onTaskFinishListener onFetchFinish = new FetchAsyncTask.onTaskFinishListener() {
+		@Override
+		public void onTaskFinish(FetchAsyncTask.Result result) {
+			if (result.isSuccess() && isAuthSaved) {
+				AuthRecordDao authRecordDao = new AuthRecordDao(RepositoryActivity.this);
+				if (authRecordDao.get(paramName, sPushName) == null) {
+					AuthRecord auth = new AuthRecord(paramName, sPushName, sFetchUsername, sFetchPassword, isAuthIgnored);
 					auth = authRecordDao.insert(auth);
 				}
 				authRecordDao.close();
@@ -323,9 +383,21 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	
 	private void push() {
 		PushAsyncTask pushTask = new PushAsyncTask(RepositoryActivity.this);
-		PushAsyncTask.Param param = new PushAsyncTask.Param(paramPath, sPushName, sUsername, sPassword, isPushAll, isAuthIgnored);
+		PushAsyncTask.Param param = new PushAsyncTask.Param(paramPath, sPushName, sPushUsername, sPushPassword, isPushAll, isAuthIgnored);
 		pushTask.setProgressDialogEnabled(true);
 		pushTask.setOnTaskFinishListener(onPushFinish);
 		pushTask.execute(new PushAsyncTask.Param[]{param});
+	}
+	
+	private void fetch() {
+		FetchAsyncTask fetchTask = new FetchAsyncTask(RepositoryActivity.this);
+		FetchAsyncTask.Param param = new FetchAsyncTask.Param(paramPath, sFetchName, sFetchUsername, sFetchPassword, isAuthIgnored);
+		fetchTask.setProgressDialogEnabled(true);
+		fetchTask.setOnTaskFinishListener(onFetchFinish);
+		fetchTask.execute(new FetchAsyncTask.Param[]{param});
+	}
+	
+	private enum Operation {
+		PUSH, FETCH;
 	}
 }

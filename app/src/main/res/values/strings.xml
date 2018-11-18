@@ -68,4 +68,16 @@
 	<string name="push_result_rejected_remote_changed">[%1$s] Remote ref update was rejected, because old object id on remote repository wasn\'t the same as defined expected old object.\n</string>
 	<string name="push_result_up_to_date">[%1$s] remote ref is up to date.\n</string>
 	<string name="repository_import_err">Can\'t find the git repository, please create a new one</string>
+	<string name="fetch">Fetch</string>
+	<string name="fetch_result_fast_forward">[%1$s] The ref was updated/deleted in a fast-forward way.</string>
+	<string name="fetch_result_forced">[%1$s] The ref had to be forcefully updated/deleted.</string>
+	<string name="fetch_result_io_failure">[%1$s] The ref was probably not updated/deleted because of I/O error.</string>
+	<string name="fetch_result_lock_failure">[%1$s] The ref could not be locked for update/delete.</string>
+	<string name="fetch_result_new">[%1$s] The ref was created locally for an update, but ignored for delete.</string>
+	<string name="fetch_result_no_change">[%1$s] Same value already stored.</string>
+	<string name="fetch_result_not_attempted">[%1$s] The ref update/delete has not been attempted by the caller.</string>
+	<string name="fetch_result_rejected">[%1$s] Not a fast-forward and not stored.</string>
+	<string name="fetch_result_rejected_current_branch">[%1$s] Rejected because trying to delete the current branch.</string>
+	<string name="fetch_result_renamed">[%1$s] The ref was renamed from another name</string>
+	
 </resources>

@@ -6,6 +6,10 @@
         android:title="@string/push"/>
 	
 	<item 
+		android:id="@+id/fetch"
+		android:title="@string/fetch"/>
+	
+	<item 
 		android:id="@+id/addRemote"
 		android:title="@string/add_remote"/>
     
