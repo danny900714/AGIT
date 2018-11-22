@@ -81,7 +81,7 @@ public class CloneAsyncTask extends AsyncTask<CloneAsyncTask.Params, CloneAsyncT
 			
 			// clone
 			try {
-				Git.cloneRepository().setURI(param.url).setDirectory(targetDirectory).setProgressMonitor(monitor).call();
+				Git.cloneRepository().setURI(param.url).setDirectory(targetDirectory).setCloneAllBranches(true).setProgressMonitor(monitor).call();
 			} catch (GitAPIException e) {
 				e.printStackTrace();
 				return ERR_WHEN_CLONE;

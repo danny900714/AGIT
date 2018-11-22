@@ -82,4 +82,7 @@
 	<string name="pull">Pull</string>
 	<string name="pull_result">Pull result:\u020</string>
 	<string name="rebase_after_fetch">Rebase after fetch</string>
+	<string name="switch_branch">Switch branch</string>
+	<string name="branches">Branches</string>
+	<string name="tags">Tags</string>
 </resources>

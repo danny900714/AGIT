@@ -77,6 +77,11 @@
 		<item name="android:background">?android:attr/selectableItemBackground</item>
 	</style>
 	
+	<style name="AppTheme.SelectableItem.Borderless" parent="AppTheme">
+		<item name="android:background">?attr/selectableItemBackgroundBorderless</item>
+		<item name="android:clickable">true</item>
+	</style>
+	
 	<style name="AppTheme.TextView.OneLine" parent="AppTheme">
 		<item name="android:maxLines">1</item>
 	</style>
