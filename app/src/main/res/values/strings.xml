@@ -91,4 +91,7 @@
 	<string name="choose_branch">Choose branch</string>
 	<string name="merge">Merge</string>
 	<string name="fast_forward_merge">Fast-Forward merge</string>
+	<string name="delete_branch">Delete branch</string>
+	<string name="branch_delete_success">Branch delete success</string>
+	<string name="delete">Delete</string>
 </resources>

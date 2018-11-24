@@ -35,7 +35,7 @@ import com.danny.tools.git.checkout.*;
 import com.danny.tools.git.merge.*;
 import com.danny.tools.git.merge.MergeBranchAsyncTask.*;
 
-public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener
+public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener, BranchDeleteDialog.OnReceiveListener
 {
 	public static final String PARAM_NAME = "NAME";
 	public static final String PARAM_PATH = "PATH";
@@ -335,6 +335,14 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		mergeTask.setOnTaskFinishListener(onMergeTaskFinish);
 		mergeTask.execute(new MergeBranchAsyncTask.Param[]{param});
 	}
+
+	@Override
+	public void onBranchDeleteReceive(String branchName) {
+		BranchDeleteAsyncTask deleteTask = new BranchDeleteAsyncTask();
+		BranchDeleteAsyncTask.Param param = new BranchDeleteAsyncTask.Param(paramPath, branchName);
+		deleteTask.setOnTaskFinishListener(onBranchDeleteTaskFinish);
+		deleteTask.execute(new BranchDeleteAsyncTask.Param[]{param});
+	}
 	
 	private View.OnClickListener onFabCommitClick = new View.OnClickListener() {
 		@Override
@@ -411,6 +419,14 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 								argsMerge.putString(MergeBranchDialog.ARG_KEY_PATH, paramPath);
 								mergeDialog.setArguments(argsMerge);
 								mergeDialog.show(getSupportFragmentManager(), MergeBranchDialog.TAG);
+								return true;
+							case R.id.deleteBranch:
+								BranchDeleteDialog deleteDialog = new BranchDeleteDialog();
+								Bundle argsDelete = new Bundle();
+								argsDelete.putString(MergeBranchDialog.ARG_KEY_PATH, paramPath);
+								deleteDialog.setArguments(argsDelete);
+								deleteDialog.show(getSupportFragmentManager(), MergeBranchDialog.TAG);
+								return true;
 						}
 						return false;
 					}
@@ -518,6 +534,14 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 					Toast.makeText(RepositoryActivity.this, R.string.err_message, Toast.LENGTH_LONG).show();
 					break;
 			}
+		}
+	};
+	
+	private BranchDeleteAsyncTask.OnTaskFinishListener onBranchDeleteTaskFinish = new BranchDeleteAsyncTask.OnTaskFinishListener() {
+		@Override
+		public void onTaskFinish(boolean isSuccess) {
+			if (isSuccess)
+				Toast.makeText(RepositoryActivity.this, R.string.branch_delete_success, Toast.LENGTH_SHORT).show();
 		}
 	};
 	

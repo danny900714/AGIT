@@ -7,5 +7,9 @@
 	<item
         android:id="@+id/mergeBranch"
         android:title="@string/merge"/>
+	
+	<item
+        android:id="@+id/deleteBranch"
+        android:title="@string/delete"/>
     
 </menu>
