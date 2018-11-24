@@ -1,0 +1,59 @@
+<android.support.constraint.ConstraintLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent"
+	android:padding="@dimen/activity_padding">
+	
+	<Spinner 
+		android:id="@+id/dialogMergeBranchSpnBranch"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:prompt="@string/choose_branch"
+		android:spinnerMode="dialog"
+		app:layout_constraintTop_toTopOf="parent"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"/>
+
+	<android.support.design.widget.TextInputLayout
+		android:id="@+id/dialogMergeBranchEdtLayCommit"
+		android:layout_width="0dp"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/spacing_small"
+		app:layout_constraintTop_toBottomOf="@id/dialogMergeBranchSpnBranch"
+		app:layout_constraintLeft_toLeftOf="parent"
+		app:layout_constraintRight_toRightOf="parent"
+		app:theme="@style/AppTheme.TextInputLayout.primary"
+		app:errorEnabled="false">
+
+		<android.support.design.widget.TextInputEditText
+			android:id="@+id/dialogMergeBranchEdtCommit"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:hint="@string/merge_branch_commit_hint"
+			android:inputType="text"
+			android:singleLine="true" />
+
+	</android.support.design.widget.TextInputLayout>
+	
+	<CheckBox
+		style="@style/AppTheme.CheckBox.Primary"
+		android:id="@+id/dialogMergeBranchChkFastForward"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:layout_marginTop="@dimen/spacing_small"
+		android:theme="@style/AppTheme.CheckBox.Primary"
+		app:layout_constraintTop_toBottomOf="@id/dialogMergeBranchEdtLayCommit"
+		app:layout_constraintLeft_toLeftOf="parent" />
+
+	<TextView 
+		android:id="@+id/dialogMergeBranchTxtFastForward"
+		android:layout_width="wrap_content"
+		android:layout_height="wrap_content"
+		android:text="@string/fast_forward_merge"
+		app:layout_constraintTop_toTopOf="@id/dialogMergeBranchChkFastForward"
+		app:layout_constraintBottom_toBottomOf="@id/dialogMergeBranchChkFastForward"
+		app:layout_constraintLeft_toRightOf="@id/dialogMergeBranchChkFastForward"/>
+
+</android.support.constraint.ConstraintLayout>

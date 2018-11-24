@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    
+    <item
+        android:id="@+id/createBranch"
+        android:title="@string/create_branch"/>
+	
+	<item
+        android:id="@+id/mergeBranch"
+        android:title="@string/merge"/>
+    
+</menu>

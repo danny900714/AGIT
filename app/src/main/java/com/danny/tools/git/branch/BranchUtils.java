@@ -123,4 +123,65 @@ public class BranchUtils
 		else
 			return -1;
 	}
+	
+	public static List<Integer> getBranchTypeList(List<Ref> branchList) {
+		List<Integer> result = new ArrayList<>();
+		
+		for (Ref branch: branchList)
+			result.add(getBranchType(branch.getName()));
+		
+		return result;
+	}
+	
+	public static void createBranch(Repository repository, String name, String startPoint) throws GitAPIException {
+		Git git = new Git(repository);
+		
+		git.branchCreate().setName(name)
+			.setStartPoint(startPoint)
+			.setForce(true)
+			.call();
+	}
+	
+	public static void createBranch(File directory, String name, String startPoint) throws GitAPIException {
+		try {
+			createBranch(RepositoryUtils.openRepository(directory), name, startPoint);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static void createBranch(String path, String name, String startPoint) throws GitAPIException {
+		try {
+			createBranch(RepositoryUtils.openRepository(path), name, startPoint);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static boolean isBranchNameLegal(String branchName) {
+		if (branchName.charAt(0) == '.')
+			return false;
+		if (branchName.contains(".."))
+			return false;
+		if (branchName.charAt(branchName.length() - 1) == '/')
+			return false;
+		if (branchName.lastIndexOf(".lock") == branchName.length() - 5)
+			return false;
+		if (branchName.contains("~") || 
+			branchName.contains("^") || 
+			branchName.contains(":") || 
+			branchName.contains(" ") || 
+			branchName.contains("[") ||
+			branchName.contains("]") ||
+			branchName.contains("\""))
+			return false;
+		return true;
+	}
+	
+	public static String getRawBranchName(String pureBranchName) {
+		if (pureBranchName.indexOf("remotes/") == 0)
+			return "refs/" + pureBranchName;
+		else
+			return "refs/heads/" + pureBranchName;
+	}
 }

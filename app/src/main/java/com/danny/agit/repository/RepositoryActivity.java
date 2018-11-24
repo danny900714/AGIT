@@ -30,8 +30,12 @@ import com.danny.tools.git.gitignore.*;
 import com.danny.tools.git.fetch.*;
 import com.danny.tools.git.fetch.FetchAsyncTask.*;
 import com.danny.tools.git.pull.*;
+import com.danny.tools.git.branch.*;
+import com.danny.tools.git.checkout.*;
+import com.danny.tools.git.merge.*;
+import com.danny.tools.git.merge.MergeBranchAsyncTask.*;
 
-public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener
+public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener
 {
 	public static final String PARAM_NAME = "NAME";
 	public static final String PARAM_PATH = "PATH";
@@ -62,6 +66,9 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	private String sPullUsername;
 	private String sPullPassword;
 	private boolean isPullAuthIgnored;
+	
+	// branch create
+	private String sBranchCreateName;
 	
 	private TabLayout mTabLayout;
 	private ViewPager mViewPager;
@@ -138,6 +145,7 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		// init listener
 		mFabCommit.setOnClickListener(onFabCommitClick);
 		mImgRemote.setOnClickListener(onImgRemoteClick);
+		mImgBranch.setOnClickListener(onImgBranchClick);
 	}
 
 	@Override
@@ -307,6 +315,26 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 			pull();
 		}
 	}
+
+	@Override
+	public void onBranchCreateReceive(String name) {
+		sBranchCreateName = name;
+		BranchCreateAsyncTask branchCreateTask = new BranchCreateAsyncTask();
+		branchCreateTask.setOnTaskFinishListener(onBranchCreateFinish);
+		BranchCreateAsyncTask.Param param = new BranchCreateAsyncTask.Param(paramPath, name, null);
+		branchCreateTask.execute(new BranchCreateAsyncTask.Param[]{param});
+	}
+
+	@Override
+	public void onMergeBranchReceive(Ref branch, String commitMessage, boolean isFastForward) {
+		MergeBranchAsyncTask mergeTask = new MergeBranchAsyncTask();
+		MergeBranchAsyncTask.Param param = new MergeBranchAsyncTask.Param(paramPath, branch);
+		if (commitMessage != null && commitMessage != "")
+			param.setCommitMessage(commitMessage);
+		param.setFastForwardEnabled(isFastForward);
+		mergeTask.setOnTaskFinishListener(onMergeTaskFinish);
+		mergeTask.execute(new MergeBranchAsyncTask.Param[]{param});
+	}
 	
 	private View.OnClickListener onFabCommitClick = new View.OnClickListener() {
 		@Override
@@ -363,6 +391,34 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		}
 	};
 	
+	private View.OnClickListener onImgBranchClick = new View.OnClickListener() {
+		@Override
+		public void onClick(View view) {
+			PopupMenu popupMenu = new PopupMenu(RepositoryActivity.this, mImgBranch);
+			popupMenu.inflate(R.menu.repository_branch);
+			popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+					@Override
+					public boolean onMenuItemClick(MenuItem item)
+					{
+						switch (item.getItemId()) {
+							case R.id.createBranch:
+								BranchCreateDialog dialog = new BranchCreateDialog();
+								dialog.show(getSupportFragmentManager(), BranchCreateDialog.TAG);
+								return true;
+							case R.id.mergeBranch:
+								MergeBranchDialog mergeDialog = new MergeBranchDialog();
+								Bundle argsMerge = new Bundle();
+								argsMerge.putString(MergeBranchDialog.ARG_KEY_PATH, paramPath);
+								mergeDialog.setArguments(argsMerge);
+								mergeDialog.show(getSupportFragmentManager(), MergeBranchDialog.TAG);
+						}
+						return false;
+					}
+				});
+			popupMenu.show();
+		}
+	};
+	
 	private PushAsyncTask.onTaskFinishListener onPushFinish = new PushAsyncTask.onTaskFinishListener() {
 		@Override
 		public void onTaskFinish(PushAsyncTask.Result result){
@@ -401,6 +457,66 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 					auth = authRecordDao.insert(auth);
 				}
 				authRecordDao.close();
+			}
+		}
+	};
+	
+	private BranchCreateAsyncTask.OnTaskFinishListener onBranchCreateFinish = new BranchCreateAsyncTask.OnTaskFinishListener() {
+		@Override
+		public void onTaskFinish(BranchCreateAsyncTask.Result result) {
+			switch (result) {
+				case SUCCESS:
+					CheckoutAsyncTask checkoutTask = new CheckoutAsyncTask();
+					CheckoutAsyncTask.Param param = new CheckoutAsyncTask.Param(paramPath, BranchUtils.getRawBranchName(sBranchCreateName));
+					checkoutTask.setOnTaskFinishListener(onCheckoutAfterBranchCreateFinish);
+					checkoutTask.execute(new CheckoutAsyncTask.Param[]{param});
+					break;
+			}
+		}
+	};
+	
+	private CheckoutAsyncTask.OnTaskFinishListener onCheckoutAfterBranchCreateFinish = new CheckoutAsyncTask.OnTaskFinishListener() {
+		@Override
+		public void onTaskFinish(boolean isSuccess) {
+			if (isSuccess) {
+				Fragment fragment = adapter.getItem(0);
+				if (fragment instanceof RepositoryFileFragment) {
+					RepositoryFileFragment fileFragment = (RepositoryFileFragment) fragment;
+					fileFragment.notifyBranchChanged();
+				}
+			}
+		}
+	};
+	
+	private MergeBranchAsyncTask.OnTaskFinishListener onMergeTaskFinish = new MergeBranchAsyncTask.OnTaskFinishListener() {
+		@Override
+		public void onTaskFinish(MergeBranchAsyncTask.Result result) {
+			switch(result.getResultType()) {
+				case SUCCESS:
+					List<MergeResult> mergeResultList = result.getResultList();
+					for (MergeResult mergeResult: mergeResultList) {
+						Log.i(RepositoryActivity.class.getName(), "mergeResult.getStatus() = " + mergeResult.getMergeStatus());
+						Map<String, int[][]> allConflicts = mergeResult.getConflicts();
+						if (allConflicts != null) {
+							for (String path : allConflicts.keySet()) {
+								int[][] c = allConflicts.get(path);
+								Log.i(RepositoryActivity.class.getName(), "Conflicts in file " + path);
+								for (int i = 0; i < c.length; ++i) {
+									Log.i(RepositoryActivity.class.getName(), "  Conflict #" + i);
+									for (int j = 0; j < (c[i].length) - 1; ++j) {
+										if (c[i][j] >= 0)
+											Log.i(RepositoryActivity.class.getName(), "    Chunk for "
+											 	 + mergeResult.getMergedCommits()[j] + " starts on line #"
+											 	 + c[i][j]);
+									}
+								}
+							}
+						}
+					}
+					break;
+				case EXCEPTION:
+					Toast.makeText(RepositoryActivity.this, R.string.err_message, Toast.LENGTH_LONG).show();
+					break;
 			}
 		}
 	};

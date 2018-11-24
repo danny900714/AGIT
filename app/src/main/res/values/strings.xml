@@ -85,4 +85,10 @@
 	<string name="switch_branch">Switch branch</string>
 	<string name="branches">Branches</string>
 	<string name="tags">Tags</string>
+	<string name="create_branch">Create branch</string>
+	<string name="merge_branch">Merge Branch</string>
+	<string name="merge_branch_commit_hint">Merge commit message (optional)</string>
+	<string name="choose_branch">Choose branch</string>
+	<string name="merge">Merge</string>
+	<string name="fast_forward_merge">Fast-Forward merge</string>
 </resources>

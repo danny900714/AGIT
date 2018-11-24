@@ -57,6 +57,16 @@ public class RepositoryFileFragment extends Fragment
 		adapter.updateDataList(dataList);
 		parent = new File(argPathParent);
 	}
+	
+	public void notifyBranchChanged() {
+		try {
+			String sCurrentBranch = BranchUtils.getCurrentBranch(argPath);
+			mTxtBranch.setText(sCurrentBranch);
+		} catch (IOException e) {
+			ExceptionUtils.toastException(getContext(), e);
+		}
+		refreshFileListToParent();
+	}
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
