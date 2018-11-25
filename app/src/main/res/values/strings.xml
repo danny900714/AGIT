@@ -94,4 +94,7 @@
 	<string name="delete_branch">Delete branch</string>
 	<string name="branch_delete_success">Branch delete success</string>
 	<string name="delete">Delete</string>
+	<string name="create_tag">Create tag</string>
+	<string name="tag_name">Tag name</string>
+	<string name="tag_message_optional">Tag message (Optional)</string>
 </resources>
