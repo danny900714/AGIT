@@ -35,7 +35,7 @@ import com.danny.tools.git.checkout.*;
 import com.danny.tools.git.merge.*;
 import com.danny.tools.git.merge.MergeBranchAsyncTask.*;
 
-public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener, BranchDeleteDialog.OnReceiveListener
+public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener, BranchDeleteDialog.OnReceiveListener, TagCreateDialog.OnReceiveListener
 {
 	public static final String PARAM_NAME = "NAME";
 	public static final String PARAM_PATH = "PATH";
@@ -169,6 +169,10 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 			case R.id.addLanguage:
 				AddLanguageDialog languageDialog = new AddLanguageDialog();
 				languageDialog.show(getSupportFragmentManager(), AddLanguageDialog.TAG);
+				return true;
+			case R.id.createTag:
+				TagCreateDialog tagCreateDialog = new TagCreateDialog();
+				tagCreateDialog.show(getSupportFragmentManager(), TagCreateDialog.TAG);
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -342,6 +346,11 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		BranchDeleteAsyncTask.Param param = new BranchDeleteAsyncTask.Param(paramPath, branchName);
 		deleteTask.setOnTaskFinishListener(onBranchDeleteTaskFinish);
 		deleteTask.execute(new BranchDeleteAsyncTask.Param[]{param});
+	}
+
+	@Override
+	public void onTagCreateReceive(String name, String message, PersonIdent tagger, boolean isAnnotated, boolean isSigned) {
+		
 	}
 	
 	private View.OnClickListener onFabCommitClick = new View.OnClickListener() {

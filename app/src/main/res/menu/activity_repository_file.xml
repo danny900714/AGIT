@@ -5,6 +5,10 @@
         android:title="Database"/>
 	
 	<item 
+		android:id="@+id/createTag"
+        android:title="@string/create_tag"/>
+	
+	<item 
 		android:id="@+id/addLanguage"
         android:title="@string/add_language"/>
     
