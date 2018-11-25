@@ -20,16 +20,24 @@ public class ChoosePeopleDialog extends DialogFragment
 	public static final String ARG_KEY_PEOPLE_TYPE = "PEOPLE_TYPE";
 	public static final int ARG_PEOPLE_AUTHOR = 1;
 	public static final int ARG_PEOPLE_COMMITTER = 2;
+	public static final int ARG_PEOPLE_TAGGER = 3;
 	
 	private int peopleType;
 	private OnPersonChooseListener listener;
 	
 	private RecyclerView mRecyclerView;
 	private ChoosePeopleDialogRecyclerAdapter adapter;
+	
+	public void setOnPersonChooseListener(OnPersonChooseListener listener) {
+		this.listener = listener;
+	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
+		if (listener != null)
+			return;
+		
 		try {
 			listener = (OnPersonChooseListener) activity;
 		} catch (ClassCastException e) {
@@ -61,6 +69,8 @@ public class ChoosePeopleDialog extends DialogFragment
 			builder.setTitle(R.string.pick_author).setView(view);
 		else if (peopleType == ARG_PEOPLE_COMMITTER)
 			builder.setTitle(R.string.pick_committer).setView(view);
+		else if (peopleType == ARG_PEOPLE_TAGGER)
+			builder.setTitle(R.string.pick_tagger).setView(view);
 		
 		return builder.create();
 	}

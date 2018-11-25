@@ -34,8 +34,9 @@ import com.danny.tools.git.branch.*;
 import com.danny.tools.git.checkout.*;
 import com.danny.tools.git.merge.*;
 import com.danny.tools.git.merge.MergeBranchAsyncTask.*;
+import com.danny.tools.git.tag.*;
 
-public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener, BranchDeleteDialog.OnReceiveListener
+public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener, BranchDeleteDialog.OnReceiveListener, TagCreateDialog.OnReceiveListener
 {
 	public static final String PARAM_NAME = "NAME";
 	public static final String PARAM_PATH = "PATH";
@@ -169,6 +170,10 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 			case R.id.addLanguage:
 				AddLanguageDialog languageDialog = new AddLanguageDialog();
 				languageDialog.show(getSupportFragmentManager(), AddLanguageDialog.TAG);
+				return true;
+			case R.id.createTag:
+				TagCreateDialog tagCreateDialog = new TagCreateDialog();
+				tagCreateDialog.show(getSupportFragmentManager(), TagCreateDialog.TAG);
 				return true;
 		}
 		return super.onOptionsItemSelected(item);
@@ -342,6 +347,16 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 		BranchDeleteAsyncTask.Param param = new BranchDeleteAsyncTask.Param(paramPath, branchName);
 		deleteTask.setOnTaskFinishListener(onBranchDeleteTaskFinish);
 		deleteTask.execute(new BranchDeleteAsyncTask.Param[]{param});
+	}
+
+	@Override
+	public void onTagCreateReceive(String name, String message, PersonIdent tagger, boolean isAnnotated) {
+		TagCreateAsyncTask tagCreateTask = new TagCreateAsyncTask(RepositoryActivity.this);
+		TagCreateAsyncTask.Param param = new TagCreateAsyncTask.Param(paramPath, name);
+		param.setMessage(message);
+		param.setTagger(tagger);
+		param.setAnnotated(isAnnotated);
+		tagCreateTask.execute(new TagCreateAsyncTask.Param[]{param});
 	}
 	
 	private View.OnClickListener onFabCommitClick = new View.OnClickListener() {
