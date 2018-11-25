@@ -28,8 +28,8 @@ public class TagCreateDialog extends DialogFragment
 	private TextInputLayout mEdtLayName, mEdtLayMessage;
 	private EditText mEdtName, mEdtMessage;
 	private LinearLayout mLayTagger;
-	private CheckBox mChkAnnotated, mChkSigned;
-	private TextView mTxtAnnotated, mTxtSigned, mTxtTagger;
+	private CheckBox mChkAnnotated;
+	private TextView mTxtAnnotated, mTxtTagger;
 
 	@Override
 	public void onAttach(Activity activity) {
@@ -55,9 +55,7 @@ public class TagCreateDialog extends DialogFragment
 		mEdtMessage = view.findViewById(R.id.dialogTagCreateEdtMessage);
 		mLayTagger = view.findViewById(R.id.dialogTagCreateLayTagger);
 		mChkAnnotated = view.findViewById(R.id.dialogTagCreateChkAnnotated);
-		mChkSigned = view.findViewById(R.id.dialogTagCreateChkSigned);
 		mTxtAnnotated = view.findViewById(R.id.dialogTagCreateTxtAnnotated);
-		mTxtSigned = view.findViewById(R.id.dialogTagCreateTxtSigned);
 		mTxtTagger = view.findViewById(R.id.dialogTagCreateTxtTagger);
 
 		builder.setTitle(R.string.create_tag)
@@ -73,11 +71,9 @@ public class TagCreateDialog extends DialogFragment
 		
 		// init checkbox sysytem
 		CheckBoxUtils.attachTextViewToCheckBox(mChkAnnotated, mTxtAnnotated);
-		CheckBoxUtils.attachTextViewToCheckBox(mChkSigned, mTxtSigned);
 		
 		// init listeners
 		mLayTagger.setOnClickListener(onLayTaggerClick);
-		mChkAnnotated.setOnCheckedChangeListener(onChkAnnotatedCheckedChange);
 	}
 
 	@Override
@@ -97,9 +93,9 @@ public class TagCreateDialog extends DialogFragment
 				String sName = mEdtName.getText().toString();
 				String sMessage = mEdtMessage.getText().toString();
 				boolean isAnnotated = mChkAnnotated.isChecked();
-				boolean isSigned = mChkSigned.isChecked();
 				PersonIdent tagger = new PersonIdent(sTaggerName, sTaggerEmail);
-				listener.onTagCreateReceive(sName, sMessage, tagger, isAnnotated, isSigned);
+				listener.onTagCreateReceive(sName, sMessage, tagger, isAnnotated);
+				dismiss();
 			}
 		}
 	};
@@ -116,18 +112,6 @@ public class TagCreateDialog extends DialogFragment
 		}
 	};
 	
-	private CheckBox.OnCheckedChangeListener onChkAnnotatedCheckedChange = new CheckBox.OnCheckedChangeListener() {
-		@Override
-		public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-			if (isChecked)
-				mChkSigned.setEnabled(true);
-			else {
-				mChkSigned.setChecked(false);
-				mChkSigned.setEnabled(false);
-			}
-		}
-	};
-	
 	private ChoosePeopleDialog.OnPersonChooseListener onPersonChooseListener = new ChoosePeopleDialog.OnPersonChooseListener() {
 		@Override
 		public void onPersonChoose(int peopleType, Drawable profile, String name, String email) {
@@ -138,6 +122,6 @@ public class TagCreateDialog extends DialogFragment
 	};
 
 	public interface OnReceiveListener {
-		public void onTagCreateReceive(String name, String message, PersonIdent tagger, boolean isAnnotated, boolean isSigned);
+		public void onTagCreateReceive(String name, String message, PersonIdent tagger, boolean isAnnotated);
 	}
 }

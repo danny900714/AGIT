@@ -5,10 +5,20 @@ import org.eclipse.jgit.api.*;
 import com.danny.tools.git.repository.*;
 import java.io.*;
 import org.eclipse.jgit.api.errors.*;
+import android.content.*;
+import android.widget.*;
+import com.danny.agit.*;
+import com.danny.tools.*;
 
 public class TagCreateAsyncTask extends AsyncTask<TagCreateAsyncTask.Param, Void, Boolean> {
 	
+	private Context context;
 	private OnTaskFinishListener listener;
+	private Exception e;
+	
+	public TagCreateAsyncTask(Context context) {
+		this.context = context;
+	}
 
 	public void setOnTaskFinishListener(OnTaskFinishListener listener) {
 		this.listener = listener;
@@ -24,13 +34,14 @@ public class TagCreateAsyncTask extends AsyncTask<TagCreateAsyncTask.Param, Void
 					.setName(param.name)
 					.setMessage(param.message)
 					.setAnnotated(param.isAnnotated)
-					.setSigned(param.isSigned)
 					.setTagger(param.tagger)
 					.call();
 			} catch (IOException e) {
+				this.e = e;
 				e.printStackTrace();
 				return false;
 			} catch (GitAPIException e) {
+				this.e = e;
 				e.printStackTrace();
 				return false;
 			}
@@ -41,6 +52,11 @@ public class TagCreateAsyncTask extends AsyncTask<TagCreateAsyncTask.Param, Void
 	@Override
 	protected void onPostExecute(Boolean result) {
 		super.onPostExecute(result);
+		
+		if (result)
+			Toast.makeText(context, R.string.tag_created_success, Toast.LENGTH_SHORT).show();
+		else
+			ExceptionUtils.toastException(context, e);
 		
 		if (listener != null)
 			listener.onTaskFinish(result);
@@ -56,7 +72,6 @@ public class TagCreateAsyncTask extends AsyncTask<TagCreateAsyncTask.Param, Void
 		private String message = null;
 		private PersonIdent tagger = null;
 		private boolean isAnnotated = false;
-		private boolean isSigned = false;
 
 		public Param(String path, String name) {
 			this.path = path;
@@ -73,10 +88,6 @@ public class TagCreateAsyncTask extends AsyncTask<TagCreateAsyncTask.Param, Void
 
 		public void setAnnotated(boolean isAnnotated) {
 			this.isAnnotated = isAnnotated;
-		}
-
-		public void setSigned(boolean isSigned) {
-			this.isSigned = isSigned;
 		}
 	}
 }

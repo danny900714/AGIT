@@ -100,4 +100,5 @@
 	<string name="create_annotated_tag">Cteate an annotated tag</string>
 	<string name="sign_tag">Sign the tag</string>
 	<string name="pick_tagger">Pick a tagger</string>
+	<string name="tag_created_success">Tag is created successfully</string>
 </resources>

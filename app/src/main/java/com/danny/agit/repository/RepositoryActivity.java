@@ -34,6 +34,7 @@ import com.danny.tools.git.branch.*;
 import com.danny.tools.git.checkout.*;
 import com.danny.tools.git.merge.*;
 import com.danny.tools.git.merge.MergeBranchAsyncTask.*;
+import com.danny.tools.git.tag.*;
 
 public class RepositoryActivity extends AppCompatActivity implements PushDialog.OnOkClickListener, AuthDialog.OnOkClickListener, AddRemoteDialog.OnOkClickListener, AddLanguageDialog.OnReceiveListener, FetchDialog.OnReceiveListener, PullDialog.OnReceiveListener, BranchCreateDialog.OnReceiveListener, MergeBranchDialog.OnReceiveListener, BranchDeleteDialog.OnReceiveListener, TagCreateDialog.OnReceiveListener
 {
@@ -349,8 +350,13 @@ public class RepositoryActivity extends AppCompatActivity implements PushDialog.
 	}
 
 	@Override
-	public void onTagCreateReceive(String name, String message, PersonIdent tagger, boolean isAnnotated, boolean isSigned) {
-		
+	public void onTagCreateReceive(String name, String message, PersonIdent tagger, boolean isAnnotated) {
+		TagCreateAsyncTask tagCreateTask = new TagCreateAsyncTask(RepositoryActivity.this);
+		TagCreateAsyncTask.Param param = new TagCreateAsyncTask.Param(paramPath, name);
+		param.setMessage(message);
+		param.setTagger(tagger);
+		param.setAnnotated(isAnnotated);
+		tagCreateTask.execute(new TagCreateAsyncTask.Param[]{param});
 	}
 	
 	private View.OnClickListener onFabCommitClick = new View.OnClickListener() {
