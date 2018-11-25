@@ -47,12 +47,12 @@
 	<string name="push_all_branches">Push all branches</string>
 	<string name="choose_remote">Choose Remote</string>
 	<string name="push_success">Push Success</string>
-	<string name="add_remote">Add remote</string>
+	<string name="add_remote">Add Remote</string>
 	<string name="name">Name</string>
 	<string name="url">URL</string>
 	<string name="search_language_hint">Search a language</string>
 	<string name="choose_language">Choose a language</string>
-	<string name="add_language">Add language</string>
+	<string name="add_language">Add Language</string>
 	<string name="gitignore_exists">.gitignore has already existed</string>
 	<string name="gitignore_successfully_created">.gitignore has successfully been created</string>
 	<string name="add_gitignore">Add .gitignore:\u0020</string>
@@ -94,7 +94,7 @@
 	<string name="delete_branch">Delete branch</string>
 	<string name="branch_delete_success">Branch delete success</string>
 	<string name="delete">Delete</string>
-	<string name="create_tag">Create tag</string>
+	<string name="create_tag">Create Tag</string>
 	<string name="tag_name">Tag name</string>
 	<string name="tag_message_optional">Tag message (Optional)</string>
 	<string name="create_annotated_tag">Cteate an annotated tag</string>

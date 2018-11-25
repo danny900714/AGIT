@@ -2,7 +2,7 @@
     
     <item
         android:id="@+id/createBranch"
-        android:title="@string/create_branch"/>
+        android:title="@string/create_repository"/>
 	
 	<item
         android:id="@+id/mergeBranch"
