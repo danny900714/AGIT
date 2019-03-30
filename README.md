@@ -4,7 +4,7 @@
 					<h3 class="card-title">AGIT</h3>
 					<h6 class="card-text text-muted">Android最好用的Git App</h6>
 					<br />
-					<p class="card-text">AGIT 是一個由學生獨立開發的Git應用程式，擁有優美的圖形化介面以及強大的功能，同時支援所有Git的基本功能，例如分支和遠端儲存庫等等。因此，AGIT絕對是您在程式開發、撰寫報告、或是多重備份的最好助手。</p>
+					<p class="card-text">AGIT 是一個由學生獨立開發的Git應用程式，擁有優美的圖形化介面以及強大的功能，同時支援所有Git的基本功能，例如分支和遠端儲存庫等等。因此，AGIT絕對是您在程式開發的最好助手。</p>
 					<p class="card-text">Git是什麼？</p>
 					<p>Git是一套分散式版本控制系統，簡單來說，就像是你在玩遊戲時的還原點一樣，可以在你目前的工作進度建立一個紀錄，讓你隨時可以對這個紀錄做更動或其他工作。</p>
 					<p>
